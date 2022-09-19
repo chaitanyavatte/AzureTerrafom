@@ -1,0 +1,144 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
+- name: Azure Login
+  uses: Azure/login@v1.4.6
+  with:
+    # Paste output of `az ad sp create-for-rbac` as value of secret variable: AZURE_CREDENTIALS
+    creds: # optional
+    # ClientId of the Azure Service principal created.
+    client-id: # optional
+    # TenantId of the Azure Service principal created.
+    tenant-id: # optional
+    # Azure subscriptionId
+    subscription-id: # optional
+    # Set this value to true to enable Azure PowerShell Login in addition to Az CLI login
+    enable-AzPSSession: # optional
+    # Name of the environment. Supported values are azurecloud, azurestack, azureusgovernment, azurechinacloud, azuregermancloud. Default being azurecloud
+    environment: # optional, default is azurecloud
+    # Set this value to true to enable support for accessing tenants without subscriptions
+    allow-no-subscriptions: # optional
+    # Provide audience field for access-token. Default value is api://AzureADTokenExchange
+	
+- name: Terraform Plan for AZURE
+  # You may pin to the exact commit or the version.
+  # uses: Pwd9000-ML/terraform-azurerm-plan@c6987fc40f2110e0aa9cc71979e0fbd78d7f3a1a
+  uses: Pwd9000-ML/terraform-azurerm-plan@v1.2.4
+  with:
+    # (Optional) Specifies the path of the root terraform module.
+    path: # optional, default is .
+    # (Optional) Specify plan mode. Valid options are "deploy" or "destroy". Default=deploy.
+    plan_mode: # optional, default is deploy
+    # (Optional) Specifies version of Terraform to use. e.g: 1.1.0 Default=latest.
+    tf_version: # optional, default is latest
+    # (Required) Specifies the Terraform TFVARS file relevant to module path.
+    tf_vars_file: 
+    # (Required) Specifies the Terraform state file name for this plan.
+    tf_key: 
+    # (Required) Specifies the Azure Resource Group where the backend storage account is hosted.
+    az_resource_group: 
+    # (Required) Specifies the Azure Storage Account where the backend state is hosted.
+    az_storage_acc: 
+    # (Required) Specifies the Azure Storage account container where backend Terraform state is hosted.
+    az_container_name: 
+    # (Optional) Enables TFSEC IaC scans and code quality checks on Terraform configurations
+    enable_TFSEC: # optional
+    # Specifies the Azure ARM CLIENT ID.
+    arm_client_id: 
+    # Specifies the Azure ARM CLIENT SECRET.
+    arm_client_secret: 
+    # Specifies the Azure ARM SUBSCRIPTION ID.
+    arm_subscription_id: 
+    # Specifies the Azure ARM TENANT ID.
+    arm_tenant_id: 
+    # Specify a valid GITHUB TOKEN.
+    github_token: 
+- name: Terraform Apply for AZURE
+  # You may pin to the exact commit or the version.
+  # uses: Pwd9000-ML/terraform-azurerm-apply@32f27dea1c3dc99e39c1b971304ec9298d5132ed
+  uses: Pwd9000-ML/terraform-azurerm-apply@v1.2.4
+  with:
+    # (Optional) Specify plan mode. Valid options are "deploy" or "destroy". Default=deploy.
+    plan_mode: # optional, default is deploy
+    # (Optional) Specifies version of Terraform to use. e.g: 1.1.0 Default=latest.
+    tf_version: # optional, default is latest
+    # (Required) Specifies the Terraform state file name for this plan.
+    tf_key: 
+    # (Required) Specifies the Azure Resource Group where the backend storage account is hosted.
+    az_resource_group: 
+    # (Required) Specifies the Azure Storage Account where the backend state is hosted.
+    az_storage_acc: 
+    # (Required) Specifies the Azure Storage account container where backend Terraform state is hosted.
+    az_container_name: 
+    # Specifies the Azure ARM CLIENT ID.
+    arm_client_id: 
+    # Specifies the Azure ARM CLIENT SECRET.
+    arm_client_secret: 
+    # Specifies the Azure ARM SUBSCRIPTION ID.
+    arm_subscription_id: 
+    # Specifies the Azure ARM TENANT ID.
+    arm_tenant_id: 
+- name: Terraform Tests for AZURE
+  # You may pin to the exact commit or the version.
+  # uses: Pwd9000-ML/terraform-azurerm-tests@a6f6102abf658fbbb6ae7cc94421e1d2f16ef5ec
+  uses: Pwd9000-ML/terraform-azurerm-tests@v1.0.4
+  with:
+    # (Required) Specify a test type. Valid options are "plan", "plan-apply", "plan-apply-destroy" Default="plan".
+    test_type: # default is plan
+    # (Optional) Specifies the path of the root terraform module.
+    path: # optional, default is .
+    # (Optional) Specifies version of Terraform to use. e.g: 1.1.0 Default=latest.
+    tf_version: # optional, default is latest
+    # (Required) Specifies the Terraform TFVARS file relevant to module path.
+    tf_vars_file: 
+    # (Required) Specifies the Terraform state file name for this plan.
+    tf_key: 
+    # (Required) Specifies the Azure Resource Group where the backend storage account is hosted.
+    az_resource_group: 
+    # (Required) Specifies the Azure Storage Account where the backend state is hosted.
+    az_storage_acc: 
+    # (Required) Specifies the Azure Storage account container where backend Terraform state is hosted.
+    az_container_name: 
+    # Specifies the Azure ARM CLIENT ID.
+    arm_client_id: 
+    # Specifies the Azure ARM CLIENT SECRET.
+    arm_client_secret: 
+    # Specifies the Azure ARM SUBSCRIPTION ID.
+    arm_subscription_id: 
+    # Specifies the Azure ARM TENANT ID.
+    arm_tenant_id: 
+    # Specify a valid GITHUB TOKEN.
+    github_token: 
